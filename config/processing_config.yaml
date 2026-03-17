@@ -1,0 +1,51 @@
+# config/processing_config.yaml
+# Neuropalite — Signal processing & normalization parameters
+
+filtering:
+  bandpass:
+    low_freq: 0.5          # Hz
+    high_freq: 50.0        # Hz
+    order: 4               # Butterworth filter order
+  notch:
+    freq: 60.0             # Hz — North American power line
+    quality_factor: 30.0   # Q factor (notch width = freq/Q)
+
+psd:
+  method: "welch"
+  window_duration: 4.0     # seconds
+  overlap_fraction: 0.5    # 50% overlap
+  nfft: 1024
+
+frequency_bands:
+  delta:
+    fmin: 0.5
+    fmax: 4.0
+  theta:
+    fmin: 4.0
+    fmax: 8.0
+  alpha:
+    fmin: 8.0
+    fmax: 13.0
+  beta:
+    fmin: 13.0
+    fmax: 30.0
+  gamma:
+    fmin: 30.0
+    fmax: 50.0
+
+normalization:
+  default_method: "minmax"     # minmax | zscore | baseline | percentile
+  minmax:
+    window_duration: 60.0      # seconds
+  zscore:
+    window_duration: 60.0      # seconds
+    temperature: 1.0           # sigmoid temperature
+  baseline:
+    scaling_factor: 2.0
+  percentile:
+    window_duration: 120.0     # seconds
+    smoothing: 0.1             # exponential smoothing factor
+
+streaming:
+  lsl_update_rate: 10          # Hz — towards Unity
+  websocket_update_rate: 30    # Hz — towards UI

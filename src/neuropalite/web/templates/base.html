@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Neuropalite{% endblock %}</title>
+
+    <!-- Fonts: Quicksand (display), Outfit (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Outfit:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Opalite theme -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/opalite-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div id="sparkles-container"></div>
+
+    <header class="app-header">
+        <h1 class="app-title">NEUROPALITE</h1>
+        <p class="app-subtitle">Dyadic Neurofeedback System</p>
+    </header>
+
+    <main class="app-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+        {% block footer %}{% endblock %}
+    </footer>
+
+    <!-- Socket.IO client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
+
+    <!-- Sparkles effect -->
+    <script src="{{ url_for('static', filename='js/sparkles.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
