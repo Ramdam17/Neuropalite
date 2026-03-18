@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Neuropalite — Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+
+    <!-- Muse Status Cards -->
+    <section class="dashboard-row muse-cards">
+        {% include "components/muse-status-card.html" %}
+    </section>
+
+    <!-- Alpha Metrics -->
+    <section class="dashboard-row alpha-section">
+        {% include "components/alpha-metric-gauge.html" %}
+    </section>
+
+    <!-- Frequency Bands -->
+    <section class="dashboard-row bands-section">
+        {% include "components/band-spectrum-plot.html" %}
+    </section>
+
+</div>
+{% endblock %}
+
+{% block footer %}
+<div class="controls-bar">
+    <button class="btn btn-gradient" id="btn-baseline">Start Baseline</button>
+    <button class="btn btn-outline" id="btn-stop">Stop Recording</button>
+    <button class="btn btn-outline" id="btn-export">Export Data (XDF)</button>
+    <div class="lsl-status">
+        <span class="status-dot" id="lsl-dot"></span>
+        LSL Streaming: <span id="lsl-label">Inactive</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/socket-client.js') }}"></script>
+<script src="{{ url_for('static', filename='js/charts-manager.js') }}"></script>
+<script src="{{ url_for('static', filename='js/connection-status.js') }}"></script>
+{% endblock %}

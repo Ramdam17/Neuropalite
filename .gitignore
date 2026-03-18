@@ -1,4 +1,6 @@
+# ============================================
 # Python
+# ============================================
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -13,16 +15,6 @@ venv/
 # uv
 uv.lock
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
 # Data & logs (generated at runtime)
 data/
 logs/
@@ -31,3 +23,85 @@ logs/
 
 # Environment
 .env
+
+# ============================================
+# Unity — Unity/Neuropalite/
+# ============================================
+Unity/Neuropalite/[Ll]ibrary/
+Unity/Neuropalite/[Tt]emp/
+Unity/Neuropalite/[Oo]bj/
+Unity/Neuropalite/[Bb]uild/
+Unity/Neuropalite/[Bb]uilds/
+Unity/Neuropalite/[Ll]ogs/
+Unity/Neuropalite/[Uu]ser[Ss]ettings/
+Unity/Neuropalite/[Mm]emoryCaptures/
+Unity/Neuropalite/[Rr]ecordings/
+
+# Asset meta — keep them tracked
+!Unity/Neuropalite/[Aa]ssets/**/*.meta
+
+# Crash reports
+Unity/Neuropalite/sysinfo.txt
+Unity/Neuropalite/crashlytics-buildid.txt
+
+# Unity build artifacts
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# IDE
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.idea/
+*.swp
+*~
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Plastic SCM
+ignore.conf
+*.private.0
+*.private
+
+# Visual Studio cache
+.vsconfig
+
+# Gradle (Android)
+Unity/Neuropalite/ExportedObj/
+Unity/Neuropalite/.gradle/
+
+# TextMesh Pro
+Unity/Neuropalite/[Aa]ssets/TextMesh*Pro/
+
+# Asset Store packages (cannot redistribute — install from Asset Store)
+Unity/Neuropalite/[Aa]ssets/AnimeGirls/
+Unity/Neuropalite/[Aa]ssets/Cool Visual Effects - Part 1/
+Unity/Neuropalite/[Aa]ssets/Fireworks/
+Unity/Neuropalite/[Aa]ssets/SpaceZeta_Spotlight/
+Unity/Neuropalite/[Aa]ssets/StylizedRocksPackFREE/
+Unity/Neuropalite/[Aa]ssets/Suggo Creations/
+Unity/Neuropalite/[Aa]ssets/Tiny Teacup Studio/
+Unity/Neuropalite/[Aa]ssets/LoafbrrAssets/
+Unity/Neuropalite/[Aa]ssets/TutorialInfo/
+
+# Mixamo animations (download from mixamo.com)
+Unity/Neuropalite/[Aa]ssets/Animations/*.fbx
+
+# Music (copyrighted)
+Unity/Neuropalite/[Aa]ssets/Audio/

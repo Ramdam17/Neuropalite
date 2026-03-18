@@ -1,0 +1,233 @@
+/* ==========================================================
+   OPALITE THEME — Neuropalite Edition
+   Inspired by Taylor Swift's Lover/Midnights aesthetic
+   Glassmorphism + sparkle + neural connectivity vibes
+   ========================================================== */
+
+:root {
+    /* Primary palette */
+    --turquoise:       #00CED1;
+    --rose-coral:      #FF6B9D;
+    --orange-warm:     #FF8C42;
+    --white-azure:     #F0F8FF;
+    --blue-deep:       #1A1A2E;
+    --cyan-sparkle:    #E0FFFF;
+
+    /* Semantic aliases */
+    --bg-primary:      var(--blue-deep);
+    --bg-card:         rgba(240, 248, 255, 0.08);
+    --text-primary:    var(--white-azure);
+    --text-muted:      rgba(240, 248, 255, 0.6);
+    --accent-a:        var(--rose-coral);
+    --accent-b:        var(--orange-warm);
+    --accent-primary:  var(--turquoise);
+
+    /* Typography */
+    --font-display:    'Quicksand', sans-serif;
+    --font-body:       'Outfit', sans-serif;
+    --font-mono:       'JetBrains Mono', monospace;
+
+    /* Spacing */
+    --gap:             1.5rem;
+    --radius:          16px;
+    --radius-sm:       8px;
+}
+
+/* Reset & base */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    background-image: radial-gradient(circle at 30% 20%, rgba(0, 206, 209, 0.15) 0%, transparent 50%),
+                      radial-gradient(circle at 70% 80%, rgba(255, 107, 157, 0.08) 0%, transparent 50%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+}
+
+.app-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: 0.15em;
+    background: linear-gradient(135deg, var(--turquoise), var(--rose-coral));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-subtitle {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    margin-top: 0.25rem;
+}
+
+/* Main layout */
+.app-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--gap);
+}
+
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.dashboard-row {
+    width: 100%;
+}
+
+.muse-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+}
+
+/* Glass card — the core Opalite component */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(240, 248, 255, 0.12);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(0, 206, 209, 0.3);
+    box-shadow: 0 0 20px rgba(0, 206, 209, 0.08);
+}
+
+.card-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
+}
+
+/* Participant colors */
+.participant-a { color: var(--accent-a); }
+.participant-b { color: var(--accent-b); }
+
+/* Badge */
+.badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.15em 0.6em;
+    border-radius: 999px;
+    background: rgba(0, 206, 209, 0.15);
+    color: var(--turquoise);
+    vertical-align: middle;
+    margin-left: 0.5em;
+}
+
+/* Mono text */
+.mono { font-family: var(--font-mono); }
+
+/* Footer / controls */
+.app-footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--gap) 2rem;
+}
+
+.controls-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.5rem;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius);
+    border: 1px solid rgba(240, 248, 255, 0.08);
+}
+
+/* Buttons */
+.btn {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.03em;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-gradient {
+    background: linear-gradient(135deg, var(--rose-coral), var(--orange-warm));
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.btn-gradient:hover {
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid rgba(240, 248, 255, 0.2);
+}
+
+.btn-outline:hover {
+    border-color: var(--turquoise);
+    color: var(--turquoise);
+}
+
+/* LSL status in footer */
+.lsl-status {
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .muse-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .lsl-status {
+        margin-left: 0;
+        justify-content: center;
+    }
+}

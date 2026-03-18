@@ -1,0 +1,30 @@
+# config/muse_config.yaml
+# Neuropalite — Muse device configuration
+#
+# Replace bluetooth_address values with your actual Muse S addresses.
+# Find them via: uv run python scripts/scan_muse.py
+
+muse_devices:
+  muse_1:
+    name: "Participant A"
+    bluetooth_address: "C0FAF1F3-69AB-A60D-4EC3-422F5B953D8F"  # MuseS-0999
+    enabled: true
+    color: "#FF6B9D"
+
+  muse_2:
+    name: "Participant B"
+    bluetooth_address: "139B43A0-A2B0-BC48-840E-7CFFD242AA49"  # Muse-0D1F
+    enabled: true
+    color: "#FF8C42"
+
+acquisition:
+  sampling_rate: 256       # Hz — standard Muse S rate
+  channels:
+    - "TP9"
+    - "AF7"
+    - "AF8"
+    - "TP10"
+  buffer_duration: 10      # seconds — circular buffer window
+  auto_reconnect: true
+  reconnect_delay: 5       # seconds between reconnect attempts
+  max_reconnect_attempts: 10

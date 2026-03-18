@@ -1,0 +1,29 @@
+<!-- Alpha Metric Gauge — Normalized 0–1 display per participant -->
+
+<div class="card glass-card">
+    <h2 class="card-title">Alpha Metrics <span class="badge">Normalized 0–1</span></h2>
+
+    <div class="alpha-gauges">
+        <div class="gauge-row">
+            <span class="gauge-label participant-a">Participant A</span>
+            <div class="gauge-bar">
+                <div class="gauge-fill participant-a-fill" id="gauge-a" style="width: 0%"></div>
+            </div>
+            <span class="gauge-value mono" id="value-a">—</span>
+        </div>
+        <div class="gauge-row">
+            <span class="gauge-label participant-b">Participant B</span>
+            <div class="gauge-bar">
+                <div class="gauge-fill participant-b-fill" id="gauge-b" style="width: 0%"></div>
+            </div>
+            <span class="gauge-value mono" id="value-b">—</span>
+        </div>
+    </div>
+
+    <div class="normalization-selector">
+        <label><input type="radio" name="norm" value="minmax" checked> Min-Max</label>
+        <label><input type="radio" name="norm" value="zscore"> Z-Score</label>
+        <label><input type="radio" name="norm" value="baseline"> Baseline</label>
+        <label><input type="radio" name="norm" value="percentile"> Percentile</label>
+    </div>
+</div>
