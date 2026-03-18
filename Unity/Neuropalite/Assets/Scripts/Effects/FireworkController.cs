@@ -40,7 +40,7 @@ public class FireworkController : MonoBehaviour
     [SerializeField]
     [Tooltip("Minimum alpha difference to trigger a side firework")]
     [Range(0f, 0.5f)]
-    private float dominanceThreshold = 0.05f;
+    private float dominanceThreshold = 0.15f;
 
     [SerializeField]
     [Tooltip("Alpha difference at which burst rate is maximum")]
@@ -66,19 +66,24 @@ public class FireworkController : MonoBehaviour
     [Header("VFX — Launch Delay (seconds between rockets)")]
     [SerializeField]
     [Tooltip("Launch delay at low dominance (slow rockets)")]
-    private float sideLaunchDelaySlow = 3f;
+    private float sideLaunchDelaySlow = 0.8f;
 
     [SerializeField]
     [Tooltip("Launch delay at high dominance (rapid rockets)")]
-    private float sideLaunchDelayFast = 0.5f;
+    private float sideLaunchDelayFast = 0.05f;
 
     [SerializeField]
     [Tooltip("Launch delay at low synchrony")]
-    private float centerLaunchDelaySlow = 2f;
+    private float centerLaunchDelaySlow = 0.5f;
 
     [SerializeField]
     [Tooltip("Launch delay at peak synchrony (rapid rockets)")]
-    private float centerLaunchDelayFast = 0.3f;
+    private float centerLaunchDelayFast = 0.05f;
+
+    [Header("Cooldown")]
+    [SerializeField]
+    [Tooltip("Minimum time (s) a firework stays ON before being stopped — prevents flickering")]
+    private float minFireDuration = 1.5f;
 
     [Header("VFX — Explosion Intensity")]
     [SerializeField]
@@ -96,6 +101,11 @@ public class FireworkController : MonoBehaviour
     private bool _leftPlaying;
     private bool _rightPlaying;
     private bool _centerPlaying;
+
+    // Cooldown timers: track when each firework last started, to prevent rapid on/off
+    private float _leftStartTime = -999f;
+    private float _rightStartTime = -999f;
+    private float _centerStartTime = -999f;
 
     private void Start()
     {
@@ -119,12 +129,12 @@ public class FireworkController : MonoBehaviour
         float difference = alphaP1 - alphaP2;
         float absDifference = Mathf.Abs(difference);
 
-        UpdateSideFirework(fireworkLeft, difference > dominanceThreshold, absDifference, ref _leftPlaying, "Left");
-        UpdateSideFirework(fireworkRight, -difference > dominanceThreshold, absDifference, ref _rightPlaying, "Right");
+        UpdateSideFirework(fireworkLeft, difference > dominanceThreshold, absDifference, ref _leftPlaying, ref _leftStartTime, "Left");
+        UpdateSideFirework(fireworkRight, -difference > dominanceThreshold, absDifference, ref _rightPlaying, ref _rightStartTime, "Right");
         UpdateCenterFirework(alphaP1, alphaP2, absDifference);
     }
 
-    private void UpdateSideFirework(VisualEffect vfx, bool shouldFire, float absDifference, ref bool isPlaying, string label)
+    private void UpdateSideFirework(VisualEffect vfx, bool shouldFire, float absDifference, ref bool isPlaying, ref float startTime, string label)
     {
         if (vfx == null) return;
 
@@ -134,20 +144,21 @@ public class FireworkController : MonoBehaviour
             float launchDelay = Mathf.Lerp(sideLaunchDelaySlow, sideLaunchDelayFast, dominance);
             int explosionCount = (int)Mathf.Lerp(explosionParticlesMin, explosionParticlesMax, dominance);
 
-            // Update VFX properties (works whether playing or not)
             SetVFXProperties(vfx, launchDelay, explosionCount);
 
-            // Start playing if not already
             if (!isPlaying)
             {
                 vfx.Play();
                 isPlaying = true;
-                Debug.Log($"[Fireworks] {label} PLAY — diff={absDifference:F2} delay={launchDelay:F1}s");
+                startTime = Time.time;
+                Debug.Log($"[Fireworks] {label} PLAY — diff={absDifference:F2} delay={launchDelay:F2}s");
             }
         }
         else
         {
-            StopVFX(vfx, ref isPlaying, label);
+            // Respect minimum fire duration before stopping
+            if (isPlaying && Time.time - startTime >= minFireDuration)
+                StopVFX(vfx, ref isPlaying, label);
         }
     }
 
@@ -174,7 +185,8 @@ public class FireworkController : MonoBehaviour
             {
                 fireworkCenter.Play();
                 _centerPlaying = true;
-                Debug.Log($"[Fireworks] Center PLAY — sync={synchrony:F2} delay={launchDelay:F1}s");
+                _centerStartTime = Time.time;
+                Debug.Log($"[Fireworks] Center PLAY — sync={synchrony:F2} delay={launchDelay:F2}s");
             }
 
             if (synchrony > 0.8f)
@@ -182,7 +194,8 @@ public class FireworkController : MonoBehaviour
         }
         else
         {
-            StopVFX(fireworkCenter, ref _centerPlaying, "Center");
+            if (_centerPlaying && Time.time - _centerStartTime >= minFireDuration)
+                StopVFX(fireworkCenter, ref _centerPlaying, "Center");
         }
     }
 
