@@ -5,6 +5,8 @@ description = "Dyadic neurofeedback interface — Muse EEG, LSL streaming, Unity
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "bleak>=0.21.0",
+    "bitstring>=4.0.0",
     "pylsl>=1.16.0",
     "numpy>=1.21.0",
     "scipy>=1.7.0",
@@ -18,9 +20,6 @@ dependencies = [
     "pyxdf>=1.16.5",
     "coloredlogs>=15.0",
 ]
-
-# muse-lsl is not on PyPI — install separately:
-#   pip install git+https://github.com/alexandrebarachant/muse-lsl.git
 
 [dependency-groups]
 dev = [
