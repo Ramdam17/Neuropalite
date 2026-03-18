@@ -126,8 +126,8 @@ class LSLStreamer:
         self.raw_outlets: dict[str, LSLOutlet] = {}
         self.band_outlets: dict[str, LSLOutlet] = {}
 
-        # Combined alpha metrics outlet (2 channels: one per device)
-        self.alpha_outlet: LSLOutlet | None = None
+        # Per-device alpha outlets (AlphaPower_P1, AlphaPower_P2)
+        self.alpha_outlets: dict[str, LSLOutlet] = {}
 
         self._device_ids: list[str] = []
 
@@ -162,21 +162,23 @@ class LSLStreamer:
                 source_id=f"neuropalite_{dev_id}_bands",
             )
 
-        # Combined alpha metrics — one channel per device
-        alpha_channels = [f"alpha_{dev_id}" for dev_id in device_ids]
-        self.alpha_outlet = LSLOutlet(
-            name="AlphaMetrics",
-            stream_type="Alpha",
-            n_channels=len(device_ids),
-            srate=self._update_rate,
-            channel_names=alpha_channels,
-            source_id="neuropalite_alpha_metrics",
-        )
+        # Per-device alpha outlets: AlphaPower_P1, AlphaPower_P2, ...
+        for i, dev_id in enumerate(device_ids, 1):
+            stream_name = f"AlphaPower_P{i}"
+            self.alpha_outlets[dev_id] = LSLOutlet(
+                name=stream_name,
+                stream_type="Alpha",
+                n_channels=1,
+                srate=self._update_rate,
+                channel_names=["alpha"],
+                source_id=f"neuropalite_{stream_name}",
+            )
 
         logger.info(
-            "LSL streamer setup complete: %d raw + %d band + 1 alpha outlets",
+            "LSL streamer setup complete: %d raw + %d band + %d alpha outlets",
             len(self.raw_outlets),
             len(self.band_outlets),
+            len(self.alpha_outlets),
         )
 
     def push_raw(self, device_id: str, sample: list[float]) -> None:
@@ -209,16 +211,16 @@ class LSLStreamer:
             self.band_outlets[device_id].push(sample)
 
     def push_alpha_metrics(self, metrics: dict[str, float]) -> None:
-        """Push combined alpha metrics for all devices.
+        """Push alpha metrics to per-device outlets (AlphaPower_P1, AlphaPower_P2).
 
         Parameters
         ----------
         metrics : dict[str, float]
             Mapping ``device_id → normalized_alpha``.
         """
-        if self.alpha_outlet:
-            sample = [metrics.get(dev_id, 0.0) for dev_id in self._device_ids]
-            self.alpha_outlet.push(sample)
+        for dev_id, value in metrics.items():
+            if dev_id in self.alpha_outlets:
+                self.alpha_outlets[dev_id].push([value])
 
     def get_status(self) -> dict[str, Any]:
         """Return streaming status for all outlets.
@@ -231,14 +233,14 @@ class LSLStreamer:
         active = 0
         consumers = 0
 
-        for outlet in list(self.raw_outlets.values()) + list(self.band_outlets.values()):
+        all_outlets = (
+            list(self.raw_outlets.values())
+            + list(self.band_outlets.values())
+            + list(self.alpha_outlets.values())
+        )
+        for outlet in all_outlets:
             active += 1
             if outlet.has_consumers:
-                consumers += 1
-
-        if self.alpha_outlet:
-            active += 1
-            if self.alpha_outlet.has_consumers:
                 consumers += 1
 
         return {

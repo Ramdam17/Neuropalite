@@ -31,7 +31,7 @@ def create_app() -> Flask:
     app.config["SECRET_KEY"] = "neuropalite-dev-key"
 
     # Initialize SocketIO with eventlet async mode
-    socketio.init_app(app, async_mode="eventlet", cors_allowed_origins="*")
+    socketio.init_app(app, async_mode="threading", cors_allowed_origins="*")
 
     # Register routes
     from neuropalite.web.routes import bp

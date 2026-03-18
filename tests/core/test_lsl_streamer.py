@@ -113,7 +113,10 @@ class TestLSLStreamer:
         assert "muse_2" in streamer.raw_outlets
         assert "muse_1" in streamer.band_outlets
         assert "muse_2" in streamer.band_outlets
-        assert streamer.alpha_outlet is not None
+        assert "muse_1" in streamer.alpha_outlets
+        assert "muse_2" in streamer.alpha_outlets
+        assert streamer.alpha_outlets["muse_1"].name == "AlphaPower_P1"
+        assert streamer.alpha_outlets["muse_2"].name == "AlphaPower_P2"
 
     def test_push_bands(self, muse_config, processing_config):
         """Pushing band powers should not raise."""
@@ -137,8 +140,8 @@ class TestLSLStreamer:
         streamer.setup(["muse_1", "muse_2"])
 
         status = streamer.get_status()
-        # 2 raw + 2 band + 1 alpha = 5
-        assert status["active_outlets"] == 5
+        # 2 raw + 2 band + 2 alpha = 6
+        assert status["active_outlets"] == 6
         assert status["update_rate_hz"] == 10
         assert status["streaming"] is True
 

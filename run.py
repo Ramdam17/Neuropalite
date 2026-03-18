@@ -6,7 +6,7 @@ Usage::
     # or
     uv run python run.py
 
-Opens the Opalite dashboard at http://localhost:5000
+Opens the Opalite dashboard at http://localhost:5555
 """
 
 import logging
@@ -84,7 +84,7 @@ def main() -> None:
     socketio.run(
         app,
         host="0.0.0.0",
-        port=5000,
+        port=5555,
         debug=True,
         use_reloader=False,  # reloader conflicts with Muse threads
     )

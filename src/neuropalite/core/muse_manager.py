@@ -484,6 +484,13 @@ class MuseManager:
         # Push to buffer when the trigger channel fires
         if char_uuid == EEG_TRIGGER_CHAR:
             device.buffer.push_chunk(device._eeg_data.copy())
+            if device.buffer.n_samples % 256 == 0:  # Log every ~1 second
+                logger.debug(
+                    "%s: %d samples in buffer (%.1fs)",
+                    device.device_id,
+                    device.buffer.n_samples,
+                    device.buffer.n_samples / MUSE_SAMPLING_RATE,
+                )
 
     def _handle_telemetry(
         self,
