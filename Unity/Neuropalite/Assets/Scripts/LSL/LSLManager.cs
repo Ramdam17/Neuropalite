@@ -44,6 +44,20 @@ public class LSLManager : MonoBehaviour
     /// </summary>
     public System.Action<int, float> OnAlphaUpdated;
 
+    // --- Sync metric ---
+    /// <summary>
+    /// Continuous inter-brain synchrony metric in [0, 1].
+    /// Computed as 1 - |alphaP1 - alphaP2|, smoothed with EMA.
+    /// 1.0 = perfect sync, 0.0 = maximum divergence.
+    /// </summary>
+    public float Sync { get; private set; }
+
+    [Header("Sync")]
+    [SerializeField]
+    [Tooltip("EMA smoothing for sync metric (0 = instant, 0.99 = very smooth)")]
+    [Range(0f, 0.99f)]
+    private float syncSmoothing = 0.85f;
+
     // --- Internal ---
     private AlphaPowerReceiver[] _receivers = new AlphaPowerReceiver[2];
 
@@ -59,6 +73,20 @@ public class LSLManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SetupReceivers();
+    }
+
+    private void Update()
+    {
+        if (BothReceiving)
+        {
+            float rawSync = 1f - Mathf.Abs(GetAlpha(0) - GetAlpha(1));
+            Sync = syncSmoothing * Sync + (1f - syncSmoothing) * rawSync;
+        }
+        else
+        {
+            // No shared data — drift sync toward 0
+            Sync = Mathf.Lerp(Sync, 0f, Time.deltaTime * 2f);
+        }
     }
 
     /// <summary>

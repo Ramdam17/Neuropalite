@@ -87,32 +87,33 @@ public class AlphaAnimationDriver : MonoBehaviour
         // Feed smoothed alpha directly to the dance controller
         danceController.Alpha = _smoothedAlpha;
 
-        // Drive facial blendshapes
-        UpdateFacialExpression(_smoothedAlpha);
+        // Drive facial blendshapes from inter-brain sync (shared across both characters)
+        float sync = LSLManager.Instance != null ? LSLManager.Instance.Sync : 0f;
+        UpdateFacialExpression(sync);
     }
 
     /// <summary>
-    /// Maps alpha to facial blendshapes:
+    /// Maps inter-brain sync to facial blendshapes:
     ///   [0.0 – 0.3] → Sad face: 100 → 0 (linear ramp down)
-    ///   [0.3 – 0.7] → Happy face: 0 → 100 (linear ramp up)
-    ///   Outside these ranges, both weights are 0.
+    ///   [0.3 – 0.8] → Happy face: 0 → 100 (linear ramp up)
+    /// Both characters share the same sync value, so they smile together.
     /// </summary>
-    private void UpdateFacialExpression(float alpha)
+    private void UpdateFacialExpression(float sync)
     {
         if (faceMesh == null) return;
 
         float sadWeight = 0f;
         float happyWeight = 0f;
 
-        if (alpha < 0.3f)
+        if (sync < 0.3f)
         {
-            // Alpha 0→0.3 maps to sad 100→0
-            sadWeight = (1f - alpha / 0.3f) * 100f;
+            // Sync 0→0.3 maps to sad 100→0
+            sadWeight = (1f - sync / 0.3f) * 100f;
         }
         else
         {
-            // Alpha 0.3→0.7 maps to happy 0→100
-            happyWeight = Mathf.Clamp01((alpha - 0.3f) / 0.4f) * 100f;
+            // Sync 0.3→0.8 maps to happy 0→100
+            happyWeight = Mathf.Clamp01((sync - 0.3f) / 0.5f) * 100f;
         }
 
         faceMesh.SetBlendShapeWeight(sadBlendshapeIndex, sadWeight);

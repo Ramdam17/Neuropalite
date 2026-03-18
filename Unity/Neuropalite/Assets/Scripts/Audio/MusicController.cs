@@ -72,6 +72,9 @@ public class MusicController : MonoBehaviour
             };
         }
 
+        // Ensure app keeps running when window loses focus (critical for LSL streams)
+        Application.runInBackground = true;
+
         // Start playing
         audioSource.Play();
         _hasStartedPlaying = true;
@@ -83,15 +86,22 @@ public class MusicController : MonoBehaviour
         if (!_hasStartedPlaying || audioSource == null)
             return;
 
-        // Detect end of track
+        // Detect end of track (but NOT pause from focus loss)
         if (!audioSource.isPlaying)
         {
-            Debug.Log("[MusicController] Track ended. Returning to StartOpalite.");
+            // Unity resets time to 0 after natural clip end, or time stays near clip.length
+            bool reachedEnd = audioSource.time == 0f
+                              || audioSource.time >= audioSource.clip.length - 0.05f;
 
-            if (SceneTransition.Instance != null)
-                SceneTransition.Instance.TransitionToScene(returnSceneName);
-            else
-                SceneManager.LoadScene(returnSceneName);
+            if (reachedEnd)
+            {
+                Debug.Log("[MusicController] Track ended. Returning to StartOpalite.");
+
+                if (SceneTransition.Instance != null)
+                    SceneTransition.Instance.TransitionToScene(returnSceneName);
+                else
+                    SceneManager.LoadScene(returnSceneName);
+            }
         }
     }
 }
