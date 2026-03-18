@@ -40,7 +40,7 @@ public class FireworkController : MonoBehaviour
     [SerializeField]
     [Tooltip("Minimum alpha difference to trigger a side firework")]
     [Range(0f, 0.5f)]
-    private float dominanceThreshold = 0.15f;
+    private float dominanceThreshold = 0.3f;
 
     [SerializeField]
     [Tooltip("Alpha difference at which burst rate is maximum")]
@@ -129,8 +129,25 @@ public class FireworkController : MonoBehaviour
         float difference = alphaP1 - alphaP2;
         float absDifference = Mathf.Abs(difference);
 
-        UpdateSideFirework(fireworkLeft, difference > dominanceThreshold, absDifference, ref _leftPlaying, ref _leftStartTime, "Left");
-        UpdateSideFirework(fireworkRight, -difference > dominanceThreshold, absDifference, ref _rightPlaying, ref _rightStartTime, "Right");
+        bool leftShouldFire = difference > dominanceThreshold;
+        bool rightShouldFire = -difference > dominanceThreshold;
+
+        // Strict mutual exclusion: when one side fires, immediately force-stop the other
+        if (leftShouldFire)
+        {
+            StopVFX(fireworkRight, ref _rightPlaying, "Right");
+            UpdateSideFirework(fireworkLeft, true, absDifference, ref _leftPlaying, ref _leftStartTime, "Left");
+        }
+        else if (rightShouldFire)
+        {
+            StopVFX(fireworkLeft, ref _leftPlaying, "Left");
+            UpdateSideFirework(fireworkRight, true, absDifference, ref _rightPlaying, ref _rightStartTime, "Right");
+        }
+        else
+        {
+            UpdateSideFirework(fireworkLeft, false, absDifference, ref _leftPlaying, ref _leftStartTime, "Left");
+            UpdateSideFirework(fireworkRight, false, absDifference, ref _rightPlaying, ref _rightStartTime, "Right");
+        }
         UpdateCenterFirework(alphaP1, alphaP2, absDifference);
     }
 
