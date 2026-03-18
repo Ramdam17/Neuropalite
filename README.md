@@ -156,28 +156,41 @@ Python/
 | Scene | Description |
 |-------|-------------|
 | **StartOpalite** | Landing screen with LSL connection status indicators and a Start button |
-| **RunOpalite** | Main experience — music, dancing, lights, fireworks. Auto-returns to Start when the song ends |
+| **RunOpalite** | Main experience — music, dancing, lights, fireworks. Continues running when the window loses focus. Auto-returns to Start when the song ends |
 
 ### Alpha → Animation Mapping
 
-Each participant's alpha power (0–1) drives their character independently:
+Each participant's **dance** is driven by their own alpha independently:
 
-| Alpha Range | Dance Tier | Facial Expression |
-|-------------|-----------|-------------------|
-| 0.0 – 0.3 | Idle | Sad (100% → 0%) |
-| 0.3 – 0.5 | Low energy (Dance 1–2) | Happy (0% → 50%) |
-| 0.5 – 0.7 | Medium energy (Dance 3–5) | Happy (50% → 100%) |
-| 0.7 – 1.0 | High energy (Dance 6–7) | Happy (100%) |
+| Alpha Range | Dance Tier |
+|-------------|-----------|
+| 0.0 – 0.3 | Idle |
+| 0.3 – 0.5 | Low energy (Dance 1–2) |
+| 0.5 – 0.7 | Medium energy (Dance 3–5) |
+| 0.7 – 1.0 | High energy (Dance 6–7) |
 
 Animations play to completion before switching tiers — no mid-clip cuts.
 
+**Facial expressions** are driven by inter-brain sync (`1 - |α₁ - α₂|`), shared across both characters:
+
+| Sync Range | Expression |
+|------------|-----------|
+| 0.0 – 0.3 | Sad (100% → 0%) |
+| 0.3 – 0.8 | Happy (0% → 100%) |
+
+When both participants are in sync, both characters smile simultaneously.
+
 ### Fireworks (VFX Graph)
 
-| Condition | Firework | Behavior |
+The three VFX effects run continuously and are placed off-screen (Z = 10000) when inactive, then teleported to their scene position when conditions are met — eliminating VFX Graph warm-up latency entirely.
+
+| Condition | Firework | Position |
 |-----------|----------|----------|
-| P1 alpha > P2 alpha | Left | Fires rockets — frequency scales with dominance |
-| P2 alpha > P1 alpha | Right | Mirror of left |
-| Both > 0.5 AND close together | Center | Frequency and explosion size scale with synchrony |
+| P1 alpha > P2 alpha | Left | (-15, 0, 20) |
+| P2 alpha > P1 alpha | Right | (15, 0, 20) |
+| Both > 0.5 | Center | (0, -5, 20) |
+
+Left and right are mutually exclusive. Rocket frequency and explosion size scale with the magnitude of the alpha difference (sides) or average alpha (center).
 
 ### Nightclub Lights
 
